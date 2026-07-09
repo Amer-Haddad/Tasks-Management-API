@@ -3,726 +3,644 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tasks Management Frontend</title>
+    <title>Task App</title>
     <style>
+        /* Basic reset */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
+
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #f5f5f5;
             color: #333;
-            max-width: 1200px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f5f5f5;
         }
-        header {
-            background: #4CAF50;
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
             color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px;
-            margin-bottom: 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: background-color 0.2s;
         }
-        .container {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
+
+        .btn:hover {
+            background-color: #0056b3;
         }
-        .sidebar {
-            flex: 1;
-            background: white;
-            padding: 20px;
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-ghost {
+            background-color: transparent;
+            color: #007bff;
+            border: 1px solid #007bff;
+        }
+
+        .btn-ghost:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+        /* Inputs */
+        input, textarea, select {
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        input[type="date"] {
+            padding: 8px;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        /* Cards */
+        .card {
+            background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .main-content {
-            flex: 2;
-            background: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        h2 {
-            color: #4CAF50;
             margin-bottom: 20px;
         }
+
+        /* Task list card */
+        .task-list-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .task-list-card:hover {
+            background-color: #f8f9fa;
+        }
+
+        .task-list-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .task-list-info {
+            flex-grow: 1;
+        }
+
+        .task-list-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .task-list-count {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: #28a745;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Priority badges */
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-low {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .priority-medium {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .priority-high {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Forms */
         .form-group {
             margin-bottom: 15px;
         }
-        label {
+
+        .form-group label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
+            font-weight: 600;
         }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
+
+        /* Utility classes */
+        .d-flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-        button {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s;
+
+        .justify-between {
+            justify-content: space-between;
         }
-        button:hover {
-            background: #45a049;
+
+        .align-center {
+            align-items: center;
         }
-        button:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-        }
-        .task-list-item, .task-item {
-            background: #f9f9f9;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            border-left: 4px solid #4CAF50;
-        }
-        .task-item.completed {
-            opacity: 0.7;
-            text-decoration: line-through;
-        }
-        .task-item.high { border-left-color: #f44336; }
-        .task-item.medium { border-left-color: #ff9800; }
-        .task-item.low { border-left-color: #4CAF50; }
-        .status-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        .status-open { background: #ff9800; color: white; }
-        .status-in-progress { background: #2196F3; color: white; }
-        .status-done { background: #4CAF50; color: white; }
-        .priority-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        .priority-high { background: #f44336; color: white; }
-        .priority-medium { background: #ff9800; color: white; }
-        .priority-low { background: #4CAF50; color: white; }
-        .empty-state {
+
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 1rem; }
+        .mt-4 { margin-top: 1.5rem; }
+        .mt-5 { margin-top: 3rem; }
+
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 1rem; }
+        .mb-4 { margin-bottom: 1.5rem; }
+        .mb-5 { margin-bottom: 3rem; }
+
+        .text-center {
             text-align: center;
-            padding: 40px 20px;
-            color: #666;
         }
-        #loading {
-            text-align: center;
-            padding: 20px;
+
+        /* Hidden */
+        .d-none {
             display: none;
-        }
-        #loading.show {
-            display: block;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Tasks Management System</h1>
-        <p>A simple frontend for the Tasks API</p>
-    </header>
+<div id="app" class="container"></div>
 
-    <div class="container">
-        <div class="sidebar">
-            <h2>Task Lists</h2>
-            <div id="loading-lists" class="loading">Loading task lists...</div>
+<script>
+    // State management
+    let state = {
+        taskLists: [] // array of { id, title, description, tasks: [] }
+    };
+
+    // Load state from localStorage
+    function loadState() {
+        const saved = localStorage.getItem('taskLists');
+        if (saved) {
+            try {
+                state.taskLists = JSON.parse(saved);
+            } catch (e) {
+                console.error('Failed to parse task lists from localStorage', e);
+                state.taskLists = [];
+            }
+        } else {
+            state.taskLists = [];
+        }
+    }
+
+    // Save state to localStorage
+    function saveState() {
+        try {
+            localStorage.setItem('taskLists', JSON.stringify(state.taskLists));
+        } catch (e) {
+            console.error('Failed to save task lists to localStorage', e);
+        }
+    }
+
+    // Helper to generate a simple ID
+    function generateId() {
+        return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+    }
+
+    // Helper to find a task list by ID
+    function findTaskList(id) {
+        return state.taskLists.find(list => list.id === id);
+    }
+
+    // Helper to find a task by ID within a task list
+    function findTask(listId, taskId) {
+        const list = findTaskList(listId);
+        if (!list) return null;
+        return list.tasks.find(task => task.id === taskId) || null;
+    }
+
+    // Compute progress for a task list (ratio of completed tasks)
+    function computeProgress(taskList) {
+        if (!taskList || !taskList.tasks || taskList.tasks.length === 0) {
+            return 0;
+        }
+        const completed = taskList.tasks.filter(task => task.status === 'CLOSED').length;
+        return completed / taskList.tasks.length;
+    }
+
+    // Render functions for each view
+
+    function renderHome() {
+        const app = document.getElementById('app');
+        app.innerHTML = `
+            <h1 class="mb-4">My Task Lists</h1>
+            <a href="#/new-task-list" class="btn mb-4">Create New Task List</a>
             <div id="task-lists-container">
-                <!-- Task lists will be inserted here -->
+                ${state.taskLists.length === 0 ? '<p class="text-center text-muted">No task lists yet. Create one to get started.</p>' : ''}
             </div>
+        `;
 
-            <div class="form-group">
-                <h3 id="task-list-form-title">Create New Task List</h3>
-                <input type="text" id="new-task-list-title" placeholder="Task list title">
-                <input type="text" id="new-task-list-description" placeholder="Description (optional)">
-                <button id="create-task-list-btn">Create Task List</button>
-                <button id="cancel-task-list-btn" style="display: none; margin-left: 10px;">Cancel</button>
+        const container = document.getElementById('task-lists-container');
+        if (state.taskLists.length > 0) {
+            const listHTML = state.taskLists.map(list => {
+                const progress = computeProgress(list) * 100;
+                return `
+                    <a href="#/task-lists/${list.id}" class="task-list-card mb-3">
+                        <div class="task-list-icon">📋</div>
+                        <div class="task-list-info">
+                            <div class="task-list-title">${list.title}</div>
+                            <div class="task-list-count">${list.tasks.length} tasks</div>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: ${progress}%"></div>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+            container.innerHTML = listHTML;
+        }
+    }
+
+    function renderCreateEditTaskListScreen() {
+        const app = document.getElementById('app');
+        const hash = window.location.hash;
+        const isEdit = hash.includes('/edit-task-list/');
+        const listId = isEdit ? hash.split('/').pop() : null;
+        const taskList = listId ? findTaskList(listId) : null;
+
+        app.innerHTML = `
+            <div class="mb-4">
+                <a href="#/" class="btn btn-secondary">← Back to Task Lists</a>
+                <h1>${isEdit ? 'Edit Task List' : 'Create Task List'}</h1>
             </div>
-        </div>
+            <form id="task-list-form" class="card">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" required value="${taskList ? taskList.title : ''}">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description (optional)</label>
+                    <textarea id="description">${taskList ? taskList.description || '' : ''}</textarea>
+                </div>
+                <button type="submit" class="btn">${isEdit ? 'Update Task List' : 'Create Task List'}</button>
+            </form>
+        `;
 
-        <div class="main-content">
-            <h2>Tasks</h2>
-            <div id="selected-task-list-info">
-                <!-- Selected task list info will be shown here -->
+        const form = document.getElementById('task-list-form');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = document.getElementById('title').value.trim();
+            const description = document.getElementById('description').value.trim() || null;
+
+            if (!title) {
+                alert('Title is required');
+                return;
+            }
+
+            if (isEdit && listId) {
+                // Update existing task list
+                const list = findTaskList(listId);
+                if (list) {
+                    list.title = title;
+                    list.description = description;
+                    // Note: tasks remain unchanged
+                    saveState();
+                    window.location.hash = '#/';
+                }
+            } else {
+                // Create new task list
+                const newList = {
+                    id: generateId(),
+                    title: title,
+                    description: description,
+                    tasks: []
+                };
+                state.taskLists.push(newList);
+                saveState();
+                window.location.hash = '#/';
+            }
+        });
+    }
+
+    function renderTaskListScreen() {
+        const app = document.getElementById('app');
+        const hash = window.location.hash;
+        const listId = hash.split('/')[2]; // #/task-lists/:id
+        const taskList = findTaskList(listId);
+
+        if (!taskList) {
+            app.innerHTML = '<p>Task list not found. <a href="#/" class="btn">Go back</a></p>';
+            return;
+        }
+
+        app.innerHTML = `
+            <div class="mb-4 d-flex justify-between align-center">
+                <a href="#/" class="btn btn-secondary">← Back to Task Lists</a>
+                <h1>${taskList.title}</h1>
+                <a href="#/edit-task-list/${listId}" class="btn btn-ghost">Edit List</a>
             </div>
-            <div id="loading-tasks" class="loading">Loading tasks...</div>
-            <div id="tasks-container">
-                <!-- Tasks will be inserted here -->
+            <div class="mb-4">
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: ${computeProgress(taskList) * 100}%"></div>
+                </div>
             </div>
-
-            <div class="form-group" id="task-form-container" style="display: none;">
-                <h3 id="task-form-title">Add New Task</h3>
-                <input type="text" id="new-task-title" placeholder="Task title (required)">
-                <input type="text" id="new-task-description" placeholder="Description">
-                <input type="datetime-local" id="new-task-due-date">
-                <select id="new-task-priority">
-                    <option value="LOW">Low</option>
-                    <option value="MEDIUM" selected>Medium</option>
-                    <option value="HIGH">High</option>
-                </select>
-                <select id="new-task-status">
-                    <option value="OPEN" selected>Open</option>
-                    <option value="IN_PROGRESS">In Progress</option>
-                    <option value="DONE">Done</option>
-                </select>
-                <button id="cancel-task-btn" style="display: none; margin-right: 10px; background: #9e9e9e;">Cancel</button>
-                <button id="create-task-btn">Create Task</button>
+            <a href="#/task-lists/${listId}/new-task" class="btn mb-4 w-full">+ Add Task</a>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Completed</th>
+                            <th>Title</th>
+                            <th>Priority</th>
+                            <th>Due Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tasks-tbody">
+                        ${taskList.tasks.length === 0 ? '<tr><td colspan="5" class="text-center text-muted py-4">No tasks yet. Add one to get started.</td></tr>' : ''}
+                    </tbody>
+                </table>
             </div>
-        </div>
-    </div>
+            <div class="mb-4 text-center">
+                <button id="delete-list-btn" class="btn btn-danger">Delete Task List</button>
+            </div>
+        `;
 
-    <script>
-        const API_BASE = 'http://localhost:8080';
-        let selectedTaskListId = null;
+        const tbody = document.getElementById('tasks-tbody');
+        if (taskList.tasks.length > 0) {
+            const rowsHTML = taskList.tasks.map(task => {
+                const isClosed = task.status === 'CLOSED';
+                const dueDateStr = task.dueDate ? new Date(task.dueDate).toLocaleDateString() : '';
+                return `
+                    <tr>
+                        <td>
+                            <input type="checkbox" ${isClosed ? 'checked' : ''} data-task-id="${task.id}">
+                        </td>
+                        <td>${task.title}</td>
+                        <td><span class="priority-badge priority-${task.priority.toLowerCase()}">${task.priority}</span></td>
+                        <td>${dueDateStr}</td>
+                        <td>
+                            <a href="#/task-lists/${listId}/edit-task/${task.id}" class="btn btn-sm btn-ghost">Edit</a>
+                            <button class="btn btn-sm btn-danger delete-task-btn" data-task-id="${task.id}">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            tbody.innerHTML = rowsHTML;
 
-        // DOM Elements
-        const taskListsContainer = document.getElementById('task-lists-container');
-        const selectedTaskListInfo = document.getElementById('selected-task-list-info');
-        const loadingTasks = document.getElementById('loading-tasks');
-        const tasksContainer = document.getElementById('tasks-container');
-        const taskFormContainer = document.getElementById('task-form-container');
-        const loadingLists = document.getElementById('loading-lists');
-        const createTaskListBtn = document.getElementById('create-task-list-btn');
-        const createTaskBtn = document.getElementById('create-task-btn');
+            // Add event listeners for checkboxes and delete buttons
+            tbody.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function(e) {
+                    const taskId = e.target.dataset.taskId;
+                    const task = findTask(listId, taskId);
+                    if (task) {
+                        task.status = e.target.checked ? 'CLOSED' : 'OPEN';
+                        saveState();
+                        // Update progress bar
+                        const progressBar = document.querySelector('.progress-bar');
+                        if (progressBar) {
+                            progressBar.style.width = computeProgress(taskList) * 100 + '%';
+                        }
+                    }
+                });
+            });
 
-        // Task edit state
-        let editingTaskId = null;
-        let editingTaskListId = null;
-        let editingTaskListIdForTask = null;
+            tbody.querySelectorAll('.delete-task-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (!confirm('Are you sure you want to delete this task?')) return;
+                    const taskId = e.target.dataset.taskId;
+                    const taskList = findTaskList(listId);
+                    if (taskList) {
+                        taskList.tasks = taskList.tasks.filter(task => task.id !== taskId);
+                        saveState();
+                        // Re-render the task list screen to update the table
+                        renderTaskListScreen();
+                    }
+                });
+            });
+        }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            loadTaskLists();
+        // Delete task list button
+        document.getElementById('delete-list-btn').addEventListener('click', function() {
+            if (!confirm('Are you sure you want to delete this task list and all its tasks?')) return;
+            state.taskLists = state.taskLists.filter(list => list.id !== listId);
+            saveState();
+            window.location.hash = '#/';
+        });
+    }
 
-            // Event listeners
-            createTaskListBtn.addEventListener('click', createTaskList);
-            document.getElementById('cancel-task-list-btn').addEventListener('click', cancelTaskListEdit);
-            document.getElementById('cancel-task-btn').addEventListener('click', cancelTaskEdit);
-            document.getElementById('create-task-btn').addEventListener('click', updateTask);
+    function renderCreateEditTaskScreen() {
+        const app = document.getElementById('app');
+        const hash = window.location.hash;
+        const parts = hash.split('/');
+        const listId = parts[2]; // #/task-lists/:listId/new-task or :listId/edit-task/:taskId
+        const isEdit = parts.includes('edit-task');
+        const taskId = isEdit ? parts.pop() : null;
+        const taskList = findTaskList(listId);
+        const task = taskId ? findTask(listId, taskId) : null;
+
+        if (!taskList) {
+            app.innerHTML = '<p>Task list not found. <a href="#/" class="btn">Go back</a></p>';
+            return;
+        }
+
+        app.innerHTML = `
+            <div class="mb-4 d-flex justify-between align-center">
+                <a href="#/task-lists/${listId}" class="btn btn-secondary">← Back to Task List</a>
+                <h1>${isEdit ? 'Edit Task' : 'Create Task'}</h1>
+            </div>
+            <form id="task-form" class="card">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" required value="${task ? task.title : ''}">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description (optional)</label>
+                    <textarea id="description">${task ? task.description || '' : ''}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="dueDate">Due date (optional)</label>
+                    <input type="date" id="dueDate" value="${task && task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : ''}">
+                </div>
+                <div class="form-group">
+                    <label>Priority</label>
+                    <div class="d-flex justify-between">
+                        <button class="priority-btn ${task && task.priority === 'LOW' ? 'active' : ''}" data-priority="LOW">Low</button>
+                        <button class="priority-btn ${task && task.priority === 'MEDIUM' ? 'active' : ''}" data-priority="MEDIUM">Medium</button>
+                        <button class="priority-btn ${task && task.priority === 'HIGH' ? 'active' : ''}" data-priority="HIGH">High</button>
+                    </div>
+                    <input type="hidden" id="priority" value="${task ? task.priority : 'MEDIUM'}">
+                </div>
+                <button type="submit" class="btn w-full">${isEdit ? 'Update Task' : 'Create Task'}</button>
+            </form>
+        `;
+
+        // Set active priority button
+        const priorityButtons = document.querySelectorAll('.priority-btn');
+        priorityButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                priorityButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('priority').value = this.dataset.priority;
+            });
         });
 
-        // Load task lists
-        async function loadTaskLists() {
-            loadingLists.style.display = 'block';
-            taskListsContainer.innerHTML = '';
+        const form = document.getElementById('task-form');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = document.getElementById('title').value.trim();
+            const description = document.getElementById('description').value.trim() || null;
+            const dueDateInput = document.getElementById('dueDate').value;
+            const dueDate = dueDateInput ? new Date(dueDateInput).toISOString() : null;
+            const priority = document.getElementById('priority').value;
 
-            try {
-                const response = await fetch(`${API_BASE}/task-lists`);
-                if (!response.ok) throw new Error('Failed to fetch task lists');
-
-                const taskLists = await response.json();
-
-                if (taskLists.length === 0) {
-                    taskListsContainer.innerHTML = '<p class="empty-state">No task lists found. Create one to get started!</p>';
-                } else {
-                    taskLists.forEach(list => {
-                        const listElement = document.createElement('div');
-                        listElement.className = 'task-list-item';
-                        listElement.dataset.id = list.id;
-                        listElement.innerHTML = `
-                            <h3>${list.title}</h3>
-                            <p>${list.description || 'No description'}</p>
-                            <small>Tasks: ${list.count || 0} | Progress: ${(list.progress || 0).toFixed(0)}%</small>
-                            <div style="margin-top: 10px;">
-                                <button onclick="editTaskList('${list.id}', '${list.title}', '${list.description || ''}')" style="background: #2196F3; margin-right: 5px; padding: 5px 10px; font-size: 14px;">Edit</button>
-                                <button onclick="deleteTaskList('${list.id}')" style="background: #f44336; padding: 5px 10px; font-size: 14px;">Delete</button>
-                            </div>
-                        `;
-                        listElement.onclick = () => selectTaskList(list.id, list.title, listElement);
-                        taskListsContainer.appendChild(listElement);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading task lists:', error);
-                taskListsContainer.innerHTML = `<p class="empty-state">Error loading task lists: ${error.message}</p>`;
-            } finally {
-                loadingLists.style.display = 'none';
+            if (!title) {
+                alert('Title is required');
+                return;
             }
-        }
 
-        // Select a task list
-        function selectTaskList(id, title, selectedElement) {
-            selectedTaskListId = id;
-
-            // Update UI
-            document.querySelectorAll('.task-list-item').forEach(item => {
-                item.style.borderLeftWidth = '2px';
-            });
-            if (selectedElement) {
-                selectedElement.style.borderLeftWidth = '4px';
+            if (isEdit && taskId) {
+                // Update existing task
+                const task = findTask(listId, taskId);
+                if (task) {
+                    task.title = title;
+                    task.description = description;
+                    task.dueDate = dueDate;
+                    task.priority = priority;
+                    // Status remains unchanged (only changed via checkbox in task list)
+                    saveState();
+                    window.location.hash = `#/task-lists/${listId}`;
+                }
             } else {
-                // Try to find the element by ID if not provided
-                const element = document.querySelector(`.task-list-item[data-id="${id}"]`);
-                if (element) {
-                    element.style.borderLeftWidth = '4px';
-                }
+                // Create new task
+                const newTask = {
+                    id: generateId(),
+                    title: title,
+                    description: description,
+                    dueDate: dueDate,
+                    priority: priority,
+                    status: 'OPEN' // New tasks start as open
+                };
+                taskList.tasks.push(newTask);
+                saveState();
+                window.location.hash = `#/task-lists/${listId}`;
             }
+        });
+    }
 
-            selectedTaskListInfo.innerHTML = `
-                <h2>Tasks for: ${title}</h2>
-                <p>Click on a task list in the sidebar to view its tasks</p>
-            `;
-
-            loadTasks();
-            taskFormContainer.style.display = 'block';
+    // Router
+    function route() {
+        const hash = window.location.hash || '#/';
+        if (hash === '#/') {
+            renderHome();
+        } else if (hash === '#/new-task-list') {
+            renderCreateEditTaskListScreen();
+        } else if (hash.startsWith('#/edit-task-list/')) {
+            renderCreateEditTaskListScreen();
+        } else if (hash.startsWith('#/task-lists/') && !hash.includes('/new-task') && !hash.includes('/edit-task')) {
+            // Task list detail: #/task-lists/:id
+            renderTaskListScreen();
+            renderTaskListScreen();
+        } else if (hash.includes('/task-lists/') && hash.endsWith('/new-task')) {
+            // Create task: #/task-lists/:id/new-task
+            renderCreateEditTaskScreen();
+        } else if (hash.includes('/task-lists/') && hash.includes('/edit-task')) {
+            // Edit task: #/task-lists/:id/edit-task/:taskId
+            renderCreateEditTaskScreen();
+        } else {
+            renderHome(); // fallback
         }
+    }
 
-        // Load tasks for selected task list
-        async function loadTasks() {
-            if (!selectedTaskListId) return;
-
-            loadingTasks.style.display = 'block';
-            tasksContainer.innerHTML = '';
-
-            try {
-                const response = await fetch(`${API_BASE}/task-lists/${selectedTaskListId}/tasks`);
-                if (!response.ok) throw new Error('Failed to fetch tasks');
-
-                const tasks = await response.json();
-
-                if (tasks.length === 0) {
-                    tasksContainer.innerHTML = '<p class="empty-state">No tasks in this list. Add one to get started!</p>';
-                } else {
-                    tasks.forEach(task => {
-                        const taskElement = document.createElement('div');
-                        taskElement.className = `task-item ${task.status.toLowerCase()} ${task.priority.toLowerCase()}`;
-
-                        const dueDate = task.dueDate ? new Date(task.dueDate).toLocaleString() : 'No due date';
-
-                        taskElement.innerHTML = `
-                            <h3>${task.title}</h3>
-                            <p>${task.description || 'No description'}</p>
-                            <div>
-                                <span class="status-badge status-${task.status.toLowerCase()}">${task.status}</span>
-                                <span class="priority-badge priority-${task.priority.toLowerCase()}">${task.priority}</span>
-                            </div>
-                            <small>Due: ${dueDate}</small>
-                            <div style="margin-top: 10px;">
-                                <button onclick="editTask('${task.id}', '${task.title}', '${task.description || ''}', '${task.dueDate || ''}', '${task.priority}', '${task.status}')"
-                                        style="background: #2196F3; margin-right: 5px; padding: 5px 10px; font-size: 14px;">Edit</button>
-                                <button onclick="deleteTask('${selectedTaskListId}', '${task.id}')"
-                                        style="background: #f44336; padding: 5px 10px; font-size: 14px;">Delete</button>
-                            </div>
-                        `;
-                        tasksContainer.appendChild(taskElement);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading tasks:', error);
-                tasksContainer.innerHTML = `<p class="empty-state">Error loading tasks: ${error.message}</p>`;
-            } finally {
-                loadingTasks.style.display = 'none';
-            }
-        }
-
-        // Create a new task list
-        async function createTaskList() {
-            const title = document.getElementById('new-task-list-title').value.trim();
-            const description = document.getElementById('new-task-list-description').value.trim();
-
-            if (!title) {
-                alert('Please enter a title for the task list');
-                return;
-            }
-
-            createTaskListBtn.disabled = true;
-            createTaskListBtn.textContent = 'Saving...';
-
-            try {
-                let response;
-                if (editingTaskListId) {
-                    // Update existing task list
-                    response = await fetch(`${API_BASE}/task-lists/${editingTaskListId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            title: title,
-                            description: description
-                        })
-                    });
-                } else {
-                    // Create new task list
-                    response = await fetch(`${API_BASE}/task-lists`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            title: title,
-                            description: description
-                        })
-                    });
-                }
-
-                if (!response.ok) throw new Error('Failed to save task list');
-
-                const savedList = await response.json();
-
-                // Clear form
-                document.getElementById('new-task-list-title').value = '';
-                document.getElementById('new-task-list-description').value = '';
-                editingTaskListId = null;
-                document.getElementById('task-list-form-title').textContent = 'Create New Task List';
-                document.getElementById('cancel-task-list-btn').style.display = 'none';
-                createTaskListBtn.textContent = 'Create Task List';
-
-                // Reload lists and select the updated/created one
-                loadTaskLists();
-                selectTaskList(savedList.id, savedList.title);
-
-                alert(editingTaskListId ? 'Task list updated successfully!' : 'Task list created successfully!');
-            } catch (error) {
-                console.error('Error saving task list:', error);
-                alert(`Error saving task list: ${error.message}`);
-            } finally {
-                createTaskListBtn.disabled = false;
-            }
-        }
-
-        function editTaskList(id, title, description) {
-            editingTaskListId = id;
-            document.getElementById('new-task-list-title').value = title;
-            document.getElementById('new-task-list-description').value = description || '';
-            document.getElementById('task-list-form-title').textContent = 'Edit Task List';
-            document.getElementById('cancel-task-list-btn').style.display = 'inline-block';
-            document.getElementById('create-task-list-btn').textContent = 'Update Task List';
-
-            // Scroll to form
-            document.getElementById('new-task-list-title').focus();
-        }
-
-        function cancelTaskListEdit() {
-            editingTaskListId = null;
-            document.getElementById('new-task-list-title').value = '';
-            document.getElementById('new-task-list-description').value = '';
-            document.getElementById('task-list-form-title').textContent = 'Create New Task List';
-            document.getElementById('cancel-task-list-btn').style.display = 'none';
-            document.getElementById('create-task-list-btn').textContent = 'Create Task List';
-        }
-
-        async function deleteTaskList(id) {
-            if (!confirm('Are you sure you want to delete this task list? This will delete all tasks in the list as well.')) {
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE}/task-lists/${id}`, {
-                    method: 'DELETE'
-                });
-
-                if (!response.ok) throw new Error('Failed to delete task list');
-
-                // If we deleted the currently selected list, clear selection
-                if (editingTaskListId === id) {
-                    cancelTaskListEdit();
-                }
-                if (selectedTaskListId === id) {
-                    selectedTaskListId = null;
-                    document.getElementById('selected-task-list-info').innerHTML = '<!-- Selected task list info will be shown here -->';
-                    document.getElementById('tasks-container').innerHTML = '<p class="empty-state">Select a task list to view its tasks</p>';
-                    document.getElementById('task-form-container').style.display = 'none';
-                }
-
-                loadTaskLists();
-                alert('Task list deleted successfully!');
-            } catch (error) {
-                console.error('Error deleting task list:', error);
-                alert(`Error deleting task list: ${error.message}`);
-            }
-        }
-
-        // Edit task list
-        function editTaskList(id, title, description) {
-            editingTaskListId = id;
-            document.getElementById('new-task-list-title').value = title;
-            document.getElementById('new-task-list-description').value = description || '';
-            document.getElementById('task-list-form-title').textContent = 'Edit Task List';
-            document.getElementById('cancel-task-list-btn').style.display = 'inline-block';
-            document.getElementById('create-task-list-btn').textContent = 'Update Task List';
-
-            // Scroll to form
-            document.getElementById('new-task-list-title').focus();
-        }
-
-// Update or create task
-        async function updateTask() {
-            if (!selectedTaskListId) {
-                alert('Please select a task list first');
-                return;
-            }
-
-            const title = document.getElementById('new-task-title').value.trim();
-            const description = document.getElementById('new-task-description').value.trim();
-            const dueDate = document.getElementById('new-task-due-date').value;
-            const priority = document.getElementById('new-task-priority').value;
-            const status = document.getElementById('new-task-status').value;
-
-            if (!title) {
-                alert('Please enter a title for the task');
-                return;
-            }
-
-            const btn = document.getElementById('create-task-btn');
-            btn.disabled = true;
-            btn.textContent = 'Saving...';
-
-            try {
-                let response;
-                if (editingTaskId) {
-                    // Update existing task
-                    response = await fetch(`${API_BASE}/task-lists/${selectedTaskListId}/tasks/${editingTaskId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            id: editingTaskId,
-                            title: title,
-                            description: description,
-                            dueDate: dueDate && dueDate.trim() !== '' ? dueDate : null,
-                            priority: priority,
-                            status: status
-                        })
-                    });
-                } else {
-                    // Create new task
-                    response = await fetch(`${API_BASE}/task-lists/${selectedTaskListId}/tasks`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            id: null,
-                            title: title,
-                            description: description,
-                            dueDate: dueDate && dueDate.trim() !== '' ? dueDate : null,
-                            priority: priority,
-                            status: status
-                        })
-                    });
-                }
-
-                if (!response.ok) {
-                    // Try to get more details about the error
-                    const errorText = await response.text();
-                    throw new Error(`Failed to save task: ${response.status} ${response.statusText} - ${errorText}`);
-                }
-
-                const savedTask = await response.json();
-
-                // Reset form
-                document.getElementById('new-task-title').value = '';
-                document.getElementById('new-task-description').value = '';
-                document.getElementById('new-task-due-date').value = '';
-                document.getElementById('new-task-priority').value = 'MEDIUM';
-                document.getElementById('new-task-status').value = 'OPEN';
-                editingTaskId = null;
-                document.getElementById('task-form-title').textContent = 'Add New Task';
-                document.getElementById('cancel-task-btn').style.display = 'none';
-                document.getElementById('create-task-btn').textContent = 'Create Task';
-
-                // Reload tasks
-                loadTasks();
-
-                alert(editingTaskId ? 'Task updated successfully!' : 'Task created successfully!');
-            } catch (error) {
-                console.error('Error saving task:', error);
-                alert(`Error saving task: ${error.message}`);
-            } finally {
-                document.getElementById('create-task-btn').disabled = false;
-                document.getElementById('create-task-btn').textContent = editingTaskId ? 'Update Task' : 'Create Task';
-            }
-        }
-
-        // Edit task
-        function editTask(id, title, description, dueDate, priority, status) {
-            editingTaskId = id;
-            editingTaskListIdForTask = selectedTaskListId;
-            document.getElementById('new-task-title').value = title;
-            document.getElementById('new-task-description').value = description || '';
-            document.getElementById('new-task-due-date').value = dueDate || '';
-            document.getElementById('new-task-priority').value = priority;
-            document.getElementById('new-task-status').value = status;
-            document.getElementById('task-form-title').textContent = 'Edit Task';
-            document.getElementById('cancel-task-btn').style.display = 'inline-block';
-            document.getElementById('create-task-btn').textContent = 'Update Task';
-
-            // Scroll to form
-            document.getElementById('new-task-title').focus();
-        }
-
-        // Cancel task edit
-        function cancelTaskEdit() {
-            editingTaskId = null;
-            editingTaskListIdForTask = null;
-            document.getElementById('new-task-title').value = '';
-            document.getElementById('new-task-description').value = '';
-            document.getElementById('new-task-due-date').value = '';
-            document.getElementById('new-task-priority').value = 'MEDIUM';
-            document.getElementById('new-task-status').value = 'OPEN';
-            document.getElementById('task-form-title').textContent = 'Add New Task';
-            document.getElementById('cancel-task-btn').style.display = 'none';
-            document.getElementById('create-task-btn').textContent = 'Create Task';
-        }
-
-// Edit a task
-        function editTask(id, title, description, dueDate, priority, status) {
-            editingTaskId = id;
-            editingTaskListIdForTask = selectedTaskListId;
-
-            document.getElementById('new-task-title').value = title;
-            document.getElementById('new-task-description').value = description || '';
-            document.getElementById('new-task-due-date').value = dueDate || '';
-            document.getElementById('new-task-priority').value = priority;
-            document.getElementById('new-task-status').value = status;
-
-            // Update button text and show cancel button
-            document.getElementById('task-form-title').textContent = 'Edit Task';
-            document.getElementById('create-task-btn').textContent = 'Update Task';
-            document.getElementById('cancel-task-btn').style.display = 'inline-block';
-
-            // Focus on title field
-            document.getElementById('new-task-title').focus();
-        }
-
-// Cancel task edit
-        function cancelTaskEdit() {
-            editingTaskId = null;
-            editingTaskListIdForTask = null;
-
-            // Reset form
-            document.getElementById('new-task-title').value = '';
-            document.getElementById('new-task-description').value = '';
-            document.getElementById('new-task-due-date').value = '';
-            document.getElementById('new-task-priority').value = 'MEDIUM';
-            document.getElementById('new-task-status').value = 'OPEN';
-
-            // Reset button text and hide cancel button
-            document.getElementById('task-form-title').textContent = 'Add New Task';
-            document.getElementById('create-task-btn').textContent = 'Create Task';
-            document.getElementById('cancel-task-btn').style.display = 'none';
-        }
-
-// Update task (used for both create and edit)
-        async function updateTask() {
-            if (!selectedTaskListId) {
-                alert('Please select a task list first');
-                return;
-            }
-
-            const title = document.getElementById('new-task-title').value.trim();
-            const description = document.getElementById('new-task-description').value.trim();
-            const dueDate = document.getElementById('new-task-due-date').value;
-            const priority = document.getElementById('new-task-priority').value;
-            const status = document.getElementById('new-task-status').value;
-
-            if (!title) {
-                alert('Please enter a title for the task');
-                return;
-            }
-
-            const isEdit = editingTaskId !== null;
-            const taskBtn = document.getElementById('create-task-btn');
-            taskBtn.disabled = true;
-            taskBtn.textContent = isEdit ? 'Updating...' : 'Creating...';
-
-            try {
-                const response = await fetch(`${API_BASE}/task-lists/${selectedTaskListId}/tasks${isEdit ? `/${editingTaskId}` : ''}`, {
-                    method: isEdit ? 'PUT' : 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id: isEdit ? editingTaskId : null,
-                        title: title,
-                        description: description,
-                        dueDate: dueDate && dueDate.trim() !== '' ? dueDate : null,
-                        priority: priority,
-                        status: status
-                    })
-                });
-
-                if (!response.ok) {
-                    // Try to get more details about the error
-                    const errorText = await response.text();
-                    throw new Error(`Failed to ${isEdit ? 'update' : 'create'} task: ${response.status} ${response.statusText} - ${errorText}`);
-                }
-
-                const result = await response.json();
-
-                // Reset form
-                document.getElementById('new-task-title').value = '';
-                document.getElementById('new-task-description').value = '';
-                document.getElementById('new-task-due-date').value = '';
-                document.getElementById('new-task-priority').value = 'MEDIUM';
-                document.getElementById('new-task-status').value = 'OPEN';
-                editingTaskId = null;
-                editingTaskListIdForTask = null;
-
-                // Reset button text and hide cancel button
-                document.getElementById('task-form-title').textContent = 'Add New Task';
-                document.getElementById('create-task-btn').textContent = 'Create Task';
-                document.getElementById('cancel-task-btn').style.display = 'none';
-
-                // Reload tasks
-                loadTasks();
-
-                alert(`Task ${isEdit ? 'updated' : 'created'} successfully!`);
-            } catch (error) {
-                console.error('Error saving task:', error);
-                alert(`Error saving task: ${error.message}`);
-            } finally {
-                const taskBtn = document.getElementById('create-task-btn');
-                taskBtn.disabled = false;
-                taskBtn.textContent = editingTaskId ? 'Update Task' : 'Create Task';
-            }
-        }
-
-// Delete a task
-        async function deleteTask(taskListId, taskId) {
-            if (!confirm('Are you sure you want to delete this task?')) {
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE}/task-lists/${taskListId}/tasks/${taskId}`, {
-                    method: 'DELETE'
-                });
-
-                if (!response.ok) throw new Error('Failed to delete task');
-
-                // If we were editing this task, cancel the edit
-                if (editingTaskId === taskId && editingTaskListIdForTask === taskListId) {
-                    cancelTaskEdit();
-                }
-
-                // Reload tasks
-                loadTasks();
-
-                alert('Task deleted successfully!');
-            } catch (error) {
-                console.error('Error deleting task:', error);
-                alert(`Error deleting task: ${error.message}`);
-            }
-        }
-    </script>
+    // Event listeners
+    window.addEventListener('DOMContentLoaded', () => {
+        loadState();
+        window.addEventListener('hashchange', route);
+        route(); // initial render
+    });
+</script>
 </body>
 </html>
