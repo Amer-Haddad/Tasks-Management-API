@@ -261,7 +261,7 @@ Sample Tasks:
     "description": "Review pull requests from team members",
     "dueDate": "2026-07-18T00:00:00",
     "priority": "MEDIUM",
-    "status": "IN_PROGRESS"
+    "status": "OPEN"
   }
 
 3. {
