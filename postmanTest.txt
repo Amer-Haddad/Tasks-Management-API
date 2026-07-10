@@ -1,0 +1,291 @@
+================================================================================
+TASK MANAGEMENT API - POSTMAN TESTING GUIDE
+================================================================================
+
+BASE URL: http://localhost:8080
+
+
+================================================================================
+SECTION 1: TASK LIST ENDPOINTS (TaskListController)
+================================================================================
+
+-------------------------------------------------------------------------------
+1. GET ALL TASK LISTS
+-------------------------------------------------------------------------------
+Method: GET
+URL: http://localhost:8080/task-lists
+Headers: None
+Body: None
+
+Expected Response: Array of task lists
+[
+  {
+    "id": "665d538f-4291-4d27-a175-4db7ff27efe9",
+    "title": "Work Projects",
+    "description": "All work-related tasks",
+    "count": 2,
+    "progress": 50.0,
+    "tasks": [...]
+  }
+]
+
+-------------------------------------------------------------------------------
+2. CREATE NEW TASK LIST (POST)
+-------------------------------------------------------------------------------
+Method: POST
+URL: http://localhost:8080/task-lists
+Headers: Content-Type: application/json
+Body (JSON):
+{
+  "title": "Work Projects",
+  "description": "All work-related tasks for Q3"
+}
+
+Expected Response: Created task list with generated UUID
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "title": "Work Projects",
+  "description": "All work-related tasks for Q3",
+  "count": 0,
+  "progress": 0.0,
+  "tasks": []
+}
+
+-------------------------------------------------------------------------------
+3. GET SINGLE TASK LIST
+-------------------------------------------------------------------------------
+Method: GET
+URL: http://localhost:8080/task-lists/{task_list_id}
+Example: http://localhost:8080/task-lists/665d538f-4291-4d27-a175-4db7ff27efe9
+Headers: None
+Body: None
+
+Expected Response: Single task list
+{
+  "id": "665d538f-4291-4d27-a175-4db7ff27efe9",
+  "title": "Work Projects",
+  "description": "All work-related tasks for Q3",
+  "count": 2,
+  "progress": 50.0,
+  "tasks": [...]
+}
+
+-------------------------------------------------------------------------------
+4. UPDATE TASK LIST (PUT)
+-------------------------------------------------------------------------------
+Method: PUT
+URL: http://localhost:8080/task-lists/{task_list_id}
+Example: http://localhost:8080/task-lists/665d538f-4291-4d27-a175-4db7ff27efe9
+Headers: Content-Type: application/json
+Body (JSON):
+{
+  "title": "Updated Work Projects",
+  "description": "Updated description for work tasks"
+}
+
+Expected Response: Updated task list
+{
+  "id": "665d538f-4291-4d27-a175-4db7ff27efe9",
+  "title": "Updated Work Projects",
+  "description": "Updated description for work tasks",
+  "count": 2,
+  "progress": 50.0,
+  "tasks": [...]
+}
+
+-------------------------------------------------------------------------------
+5. DELETE TASK LIST
+-------------------------------------------------------------------------------
+Method: DELETE
+URL: http://localhost:8080/task-lists/{task_list_id}
+Example: http://localhost:8080/task-lists/665d538f-4291-4d27-a175-4db7ff27efe9
+Headers: None
+Body: None
+
+Expected Response: 200 OK or 204 No Content (Empty response)
+
+
+================================================================================
+SECTION 2: TASK ENDPOINTS (TasksController)
+================================================================================
+
+-------------------------------------------------------------------------------
+6. GET ALL TASKS IN A TASK LIST
+-------------------------------------------------------------------------------
+Method: GET
+URL: http://localhost:8080/task-lists/{task_list_id}/tasks
+Example: http://localhost:8080/task-lists/665d538f-4291-4d27-a175-4db7ff27efe9/tasks
+Headers: None
+Body: None
+
+Expected Response: Array of tasks
+[
+  {
+    "id": "fd458253-4fe8-4b7c-8025-f1475d4a311f",
+    "title": "Complete project report",
+    "description": "Write and submit the Q2 report",
+    "dueDate": "2026-07-22T00:00:00",
+    "priority": "HIGH",
+    "status": "OPEN"
+  }
+]
+
+-------------------------------------------------------------------------------
+7. CREATE NEW TASK (POST)
+-------------------------------------------------------------------------------
+Method: POST
+URL: http://localhost:8080/task-lists/{task_list_id}/tasks
+Example: http://localhost:8080/task-lists/665d538f-4291-4d27-a175-4db7ff27efe9/tasks
+Headers: Content-Type: application/json
+Body (JSON):
+{
+  "title": "Complete project report",
+  "description": "Write and submit the Q2 report",
+  "dueDate": "2026-07-22T00:00:00",
+  "priority": "HIGH",
+  "status": "OPEN"
+}
+
+Priority Options: LOW, MEDIUM, HIGH
+Status Options: OPEN, IN_PROGRESS, DONE, BLOCKED
+
+Expected Response: Created task with generated UUID
+{
+  "id": "fd458253-4fe8-4b7c-8025-f1475d4a311f",
+  "title": "Complete project report",
+  "description": "Write and submit the Q2 report",
+  "dueDate": "2026-07-22T00:00:00",
+  "priority": "HIGH",
+  "status": "OPEN"
+}
+
+-------------------------------------------------------------------------------
+8. UPDATE TASK (PUT)
+-------------------------------------------------------------------------------
+Method: PUT
+URL: http://localhost:8080/task-lists/{task_list_id}/tasks/{task_id}
+Example: http://localhost:8080/task-lists/665d538f-4291-4d27-a175-4db7ff27efe9/tasks/fd458253-4fe8-4b7c-8025-f1475d4a311f
+Headers: Content-Type: application/json
+Body (JSON):
+{
+  "title": "Complete project report - UPDATED",
+  "description": "Write and submit the Q2 report with all data",
+  "dueDate": "2026-07-25T00:00:00",
+  "priority": "HIGH",
+  "status": "IN_PROGRESS"
+}
+
+Expected Response: Updated task
+{
+  "id": "fd458253-4fe8-4b7c-8025-f1475d4a311f",
+  "title": "Complete project report - UPDATED",
+  "description": "Write and submit the Q2 report with all data",
+  "dueDate": "2026-07-25T00:00:00",
+  "priority": "HIGH",
+  "status": "IN_PROGRESS"
+}
+
+-------------------------------------------------------------------------------
+9. DELETE TASK
+-------------------------------------------------------------------------------
+Method: DELETE
+URL: http://localhost:8080/task-lists/{task_list_id}/tasks/{task_id}
+Example: http://localhost:8080/task-lists/665d538f-4291-4d27-a175-4db7ff27efe9/tasks/fd458253-4fe8-4b7c-8025-f1475d4a311f
+Headers: None
+Body: None
+
+Expected Response: 200 OK or 204 No Content (Empty response)
+
+
+================================================================================
+COMPLETE TESTING WORKFLOW
+================================================================================
+
+STEP 1: Create a Task List
+POST http://localhost:8080/task-lists
+Body: {"title": "My Test List", "description": "Testing tasks"}
+SAVE the 'id' from response
+
+STEP 2: Add Tasks to the List
+POST http://localhost:8080/task-lists/{task_list_id}/tasks
+Body: {"title": "Task 1", "description": "First task", "priority": "HIGH", "status": "OPEN"}
+SAVE the 'task_id' from response
+
+STEP 3: Get All Tasks
+GET http://localhost:8080/task-lists/{task_list_id}/tasks
+
+STEP 4: Update a Task
+PUT http://localhost:8080/task-lists/{task_list_id}/tasks/{task_id}
+Body: {"title": "Updated Task", "description": "Updated description", "priority": "MEDIUM", "status": "IN_PROGRESS"}
+
+STEP 5: Delete a Task
+DELETE http://localhost:8080/task-lists/{task_list_id}/tasks/{task_id}
+
+STEP 6: Delete the Task List
+DELETE http://localhost:8080/task-lists/{task_list_id}
+
+
+================================================================================
+SAMPLE DATA FOR TESTING
+================================================================================
+
+Sample Task Lists:
+-------------------------------------------------------------------------------
+1. {
+    "title": "Work Projects",
+    "description": "All work-related tasks for Q3"
+  }
+
+2. {
+    "title": "Personal Goals",
+    "description": "Personal development and fitness goals"
+  }
+
+3. {
+    "title": "Shopping List",
+    "description": "Items to buy from the grocery store"
+  }
+
+Sample Tasks:
+-------------------------------------------------------------------------------
+1. {
+    "title": "Complete project documentation",
+    "description": "Write API documentation for the project",
+    "dueDate": "2026-07-20T00:00:00",
+    "priority": "HIGH",
+    "status": "OPEN"
+  }
+
+2. {
+    "title": "Code review",
+    "description": "Review pull requests from team members",
+    "dueDate": "2026-07-18T00:00:00",
+    "priority": "MEDIUM",
+    "status": "IN_PROGRESS"
+  }
+
+3. {
+    "title": "Deploy to production",
+    "description": "Deploy the latest version to production server",
+    "dueDate": "2026-07-25T00:00:00",
+    "priority": "HIGH",
+    "status": "BLOCKED"
+  }
+
+4. {
+    "title": "Write unit tests",
+    "description": "Add unit tests for the new features",
+    "dueDate": "2026-07-19T00:00:00",
+    "priority": "MEDIUM",
+    "status": "OPEN"
+  }
+
+5. {
+    "title": "Update dependencies",
+    "description": "Update all project dependencies to latest versions",
+    "dueDate": "2026-07-30T00:00:00",
+    "priority": "LOW",
+    "status": "OPEN"
+  }
+
+
